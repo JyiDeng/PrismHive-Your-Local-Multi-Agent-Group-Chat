@@ -101,3 +101,12 @@ export async function appendMessages(sessionId, appendedMessages, nextTitle) {
   await writeDb(db);
   return updated;
 }
+
+export async function removeSession(sessionId) {
+  const db = await readDb();
+  const idx = db.sessions.findIndex((session) => session.id === sessionId);
+  if (idx < 0) return false;
+  db.sessions.splice(idx, 1);
+  await writeDb(db);
+  return true;
+}

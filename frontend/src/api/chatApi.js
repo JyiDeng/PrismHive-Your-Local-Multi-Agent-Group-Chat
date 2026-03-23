@@ -223,6 +223,17 @@ export async function fetchSessionDetail(sessionId) {
   return data.session;
 }
 
+export async function deleteSession(sessionId) {
+  const response = await fetch(`/api/sessions/${encodeURIComponent(sessionId)}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    const data = await unwrapJson(response);
+    throw new Error(data?.error || `Request failed (${response.status})`);
+  }
+}
+
 export async function sendChatMessage(sessionId, content) {
   const response = await fetch("/api/chat", {
     method: "POST",

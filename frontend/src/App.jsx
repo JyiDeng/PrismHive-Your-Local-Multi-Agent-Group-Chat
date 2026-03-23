@@ -3,6 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import {
   createSession,
+  deleteSession,
   fetchAgentConfig,
   fetchGroupConfig,
   fetchGroups,
@@ -52,6 +53,7 @@ function App() {
   const [sessions, setSessions] = useState([]);
   const [activeSessionId, setActiveSessionId] = useState("");
   const [activeSession, setActiveSession] = useState(null);
+  const [deletingSessionId, setDeletingSessionId] = useState("");
   const [agents, setAgents] = useState([]);
   const activeSessionIdRef = useRef("");
 
@@ -228,6 +230,47 @@ function App() {
     if (!sessionId) return;
     await loadSessionDetail(sessionId);
     setInput("");
+  }
+
+  async function removeConversation(sessionId) {
+    if (!sessionId || !activeGroupId || deletingSessionId) return;
+    const target = sessions.find((session) => session.id === sessionId);
+    const ok = window.confirm(`确认删除对话“${target?.title || "未命名对话"}”？`);
+    if (!ok) return;
+
+    setDeletingSessionId(sessionId);
+    try {
+      await deleteSession(sessionId);
+      const list = await fetchSessions(activeGroupId);
+      setSessions(list);
+
+      if (activeSessionIdRef.current !== sessionId) {
+        return;
+      }
+
+      if (list.length > 0) {
+        await loadSessionDetail(list[0].id);
+        return;
+      }
+
+      const created = await createSession("对话 1", activeGroupId);
+      setSessions([
+        {
+          id: created.id,
+          groupId: created.groupId,
+          title: created.title,
+          createdAt: created.createdAt,
+          updatedAt: created.updatedAt,
+          messageCount: created.messages?.length || 0,
+        },
+      ]);
+      setActiveSession(created);
+      setActiveSessionId(created.id);
+    } catch (error) {
+      window.alert(`删除失败：${error.message}`);
+    } finally {
+      setDeletingSessionId("");
+    }
   }
 
   function setSessionLoading(sessionId, isLoading) {
@@ -507,7 +550,7 @@ function App() {
   return (
     <div className="page">
       <aside className="sidebar">
-        <h1>Open Multi-Agent Group Chat</h1>
+        <h1>PrismHive: Open Multi-Agent Group Chat</h1>
         <p className="desc">左侧选择群聊，Bot 在上方快捷 @，实现群与 Bot 解耦管理。</p>
 
         <div className="sidebar-section group-section">
@@ -564,14 +607,24 @@ function App() {
 
         <div className="session-strip">
           {sessions.map((session) => (
-            <button
+            <div
               key={session.id}
               className={`session-pill ${session.id === activeSessionId ? "active" : ""}`}
-              onClick={() => switchConversation(session.id)}
-              type="button"
             >
-              {session.title}
-            </button>
+              <button className="session-pill-main" onClick={() => switchConversation(session.id)} type="button">
+                {session.title}
+              </button>
+              <button
+                className="session-pill-delete"
+                onClick={() => removeConversation(session.id)}
+                type="button"
+                title="删除对话"
+                aria-label={`删除对话 ${session.title}`}
+                disabled={!!deletingSessionId}
+              >
+                {deletingSessionId === session.id ? "..." : "×"}
+              </button>
+            </div>
           ))}
         </div>
 

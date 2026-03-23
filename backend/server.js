@@ -14,6 +14,7 @@ import {
   createSession,
   getSessionById,
   listSessions,
+  removeSession,
 } from "./store/historyStore.js";
 import { getRuntimeConfig, setRuntimeConfig } from "./store/runtimeStore.js";
 import { getGroupConfig, setGroupConfig } from "./store/groupStore.js";
@@ -211,6 +212,18 @@ app.get("/api/sessions/:id", async (req, res) => {
     res.json({ session });
   } catch (err) {
     res.status(500).json({ error: err.message || "Failed to load session" });
+  }
+});
+
+app.delete("/api/sessions/:id", async (req, res) => {
+  try {
+    const removed = await removeSession(req.params.id);
+    if (!removed) {
+      return res.status(404).json({ error: "Session not found" });
+    }
+    return res.status(204).send();
+  } catch (err) {
+    return res.status(500).json({ error: err.message || "Failed to delete session" });
   }
 });
 
