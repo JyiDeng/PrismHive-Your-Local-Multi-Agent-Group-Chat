@@ -1,0 +1,47 @@
+node_modules/
+
+# Environment and secret files
+.env
+.env.*
+!.env.example
+
+# API keys, certs, credentials
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+*.jks
+*.keystore
+*.kdb
+*.kdbx
+*.ovpn
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+
+# Local runtime and user data (contains chat history/config/secrets)
+backend/data/
+backend/data/config/runtime.local.json
+backend/data/history/
+backend/data/history/history.db.json
+**/history.db.json
+**/history/*.json
+
+# Local exports that may include prompts/history/config
+*.export.json
+
+# Logs and debug artifacts
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS/editor local files
+.DS_Store
+.vscode/*.local

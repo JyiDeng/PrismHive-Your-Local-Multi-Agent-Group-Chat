@@ -1,0 +1,8 @@
+[
+  {
+    "id": "group_general",
+    "name": "默认群聊",
+    "intro": "通用讨论群",
+    "botIds": ["captain", "newsbot", "moodbot"]
+  }
+]
