@@ -4,15 +4,17 @@ PrismHive 是一个本地优先的多 Agent 群聊应用，让不同能力的 Bo
 
 English README: [README.md](README.md)
 
-## 快速开始
+![alt text](pic/image.png)
 
-### 1) 安装依赖
+## ⚡ 快速开始
+
+### 1) 📦 安装依赖
 
 ```bash
 npm install
 ```
 
-### 2) 配置环境变量
+### 2) 🔐 配置环境变量
 
 ```bash
 cp .env.example .env
@@ -32,7 +34,7 @@ PORT=8787
 - 后端优先使用 `DASHSCOPE_API_KEY`。
 - `OPENAI_API_KEY` 可作为兼容兜底。
 
-### 3) 启动开发模式
+### 3) ▶️ 启动开发模式
 
 ```bash
 npm run dev
@@ -43,13 +45,13 @@ npm run dev
 - 前端：`http://localhost:5173`
 - 后端：`http://localhost:8787`
 
-### 4) 构建前端
+### 4) 🏗️ 构建前端
 
 ```bash
 npm run build
 ```
 
-## 产品亮点
+## ✨ 产品亮点
 
 - 🚀 多 Agent 协作：同一条消息可触发多个 Bot 并行回复。
 - 🎯 `@` 点名机制：通过 `@agent_id` 精准指定参与回复的 Bot。
@@ -62,9 +64,9 @@ npm run build
 - 🔧 运行时 API 配置：可在 UI 中直接修改 API Key、Base URL、Model。
 - 📝 Markdown 支持：聊天内容支持 Markdown 与 GFM 渲染。
 
-## 功能清单（完整）
+## 📚 功能清单（完整）
 
-### 1. 群聊与会话
+### 1. 👥 群聊与会话
 
 - 群聊列表展示与切换。
 - 在当前群聊新建会话。
@@ -72,7 +74,7 @@ npm run build
 - 默认会话标题自动升级命名。
 - 会话历史持久化到 `backend/data/history/history.db.json`。
 
-### 2. 消息与编排
+### 2. 💬 消息与编排
 
 - 用户消息发送。
 - `@agent_id` 提及解析（仅匹配当前群聊可用 Bot）。
@@ -80,7 +82,7 @@ npm run build
 - 使用近期上下文构建转录。
 - 多 Bot 并行生成并合并写回历史。
 
-### 3. Bot 配置中心
+### 3. 🤖 Bot 配置中心
 
 - 查看全部 Bot。
 - 编辑 Bot 字段：ID、名称、简介、系统 Prompt、启用状态。
@@ -89,7 +91,7 @@ npm run build
 - 导出 Bot 配置 JSON。
 - 保存并关闭。
 
-### 4. 群聊设置中心
+### 4. 👨‍👩‍👧‍👦 群聊设置中心
 
 - 查看全部群聊。
 - 编辑群聊字段：ID、名称、简介。
@@ -100,26 +102,26 @@ npm run build
 - 保存并关闭。
 - `group_general` 全选锁定规则。
 
-### 5. API 配置中心
+### 5. 🔌 API 配置中心
 
 - 可视化编辑 `apiKey` / `baseURL` / `model`。
 - 保存并关闭。
 - 后端接口异常时前端可使用 localStorage fallback。
 
-### 6. 可靠性与体验
+### 6. 🧱 可靠性与体验
 
 - 会话级 loading，避免全局阻塞。
 - 回包绑定原会话，避免异步结果覆盖错误页面。
 - JSON 解析与错误处理增强。
 
-## 技术架构
+## 🏛️ 技术架构
 
 - 前端：React + Vite + react-markdown + remark-gfm
 - 后端：Node.js + Express + OpenAI SDK
 - 存储：本地 JSON 文件
 - 模型接口：DashScope OpenAI 兼容 API（亦兼容 OpenAI 风格 baseURL + key）
 
-## NPM 脚本
+## 🧪 NPM 脚本
 
 - 根目录
   - `npm run dev`：并行启动前后端
@@ -132,7 +134,7 @@ npm run build
 - 后端工作区
   - `npm run dev -w backend`
 
-## HTTP API 概览
+## 🌐 HTTP API 概览
 
 - `GET /api/agents`
 - `GET /api/agent-config`
@@ -147,13 +149,13 @@ npm run build
 - `GET /api/sessions/:id`
 - `POST /api/chat`
 
-## 数据与隐私
+## 🔒 数据与隐私
 
 - 本地文件会保存 Bot 配置、群聊配置、运行时 API 配置、聊天历史。
 - 前端会将部分 fallback 数据写入浏览器 localStorage。
 - `.gitignore` 已忽略敏感与运行时文件，避免误提交隐私数据。
 
-## 发布前安全建议
+## 🛡️ 发布前安全建议
 
 - 使用低权限并定期轮换的 API Key。
 - 为后端接口加入鉴权。
