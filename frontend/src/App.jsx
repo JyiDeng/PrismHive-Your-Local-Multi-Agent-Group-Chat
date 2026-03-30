@@ -47,6 +47,24 @@ function downloadJson(filename, data) {
   URL.revokeObjectURL(url);
 }
 
+function splitMessageContent(content) {
+  const text = String(content || "");
+  const normalized = text.replace(/\r\n/g, "\n");
+  const parts = normalized
+    .split(/\n{2,}/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  if (parts.length > 1) return parts;
+
+  const singleLineParts = normalized
+    .split("\n")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  return singleLineParts.length > 0 ? singleLineParts : [normalized];
+}
+
 function App() {
   const [groups, setGroups] = useState([]);
   const [activeGroupId, setActiveGroupId] = useState("");
@@ -635,14 +653,21 @@ function App() {
               <div className="bubble">正在加载群聊与历史会话...</div>
             </div>
           )}
-          {messages.map((m, idx) => (
-            <div key={`${idx}-${m.createdAt || "t"}`} className={`msg ${m.role}`}>
-              <div className="meta">{m.role === "user" ? "你" : `${m.agentName} (@${m.agentId})`}</div>
-              <div className="bubble markdown-body">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{String(m.content || "")}</ReactMarkdown>
+          {messages.map((m, idx) => {
+            const segments = splitMessageContent(m.content);
+            return (
+              <div key={`${idx}-${m.createdAt || "t"}`} className={`msg ${m.role}`}>
+                <div className="meta">{m.role === "user" ? "你" : `${m.agentName} (@${m.agentId})`}</div>
+                <div className="bubble-stack">
+                  {segments.map((segment, segmentIdx) => (
+                    <div key={`${idx}-${segmentIdx}`} className="bubble markdown-body">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{segment}</ReactMarkdown>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
           {activeSessionLoading && (
             <div className="msg assistant">
               <div className="meta">系统</div>
